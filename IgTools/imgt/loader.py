@@ -1,11 +1,10 @@
-
 import os
 from cStringIO import StringIO
 import pandas as pd
 
 imgt_filetypes = ['1_Summary', '2_IMGT-gapped-nt-sequences', '3_Nt-sequences', '4_IMGT-gapped-AA-sequences', '5_AA-sequences', '6_Junction', '7_V-REGION-mutation-and-AA-change-table', '8_V-REGION-nt-mutation-statistics', '9_V-REGION-AA-change-statistics', '10_V-REGION-mutation-hotspots', '11_Parameters']
 
-class imgt_loader(object):
+class IMGT_Loader(object):
 	
 	def __init__(self, dirname=None, filenames=None):
 		self.filesIn = self._filesIn_(dirname,filenames)
@@ -38,32 +37,46 @@ class imgt_loader(object):
 					assert h == header_cols[ft]
 		return header_cols
 
-	def load_all(self, import_fields, merge_on='Sequence ID', safe_mode=True, **pd_params):
-		
+	def load_all(self, import_fields=None, merge_on='Sequence ID', safe_mode=True, **pd_params):
+		"""import_fields: dict of {imgt_filetype: <dict|list> fields_to_return}
+		-- fields_to_return is list of fields or dict {fields : new_field_name} to rename the fields."""
+		def get_merge_field(import_fields, prefix, default_on):
+			if isinstance(import_fields,dict) and isinstance(import_fields.get(prefix), dict):
+				renamed_field = import_fields[prefix].get(default_on)
+				if renamed_field is not None:
+					return renamed_field
+			return default_on
+
 		df = pd.DataFrame()
-		for prefix in sorted(import_fields.keys()):
-			if not(import_fields[prefix]):
-				continue
+
+		prefix_list = imgt_filetypes if import_fields is None else sorted(import_fields.keys())
+		for prefix in prefix_list:
 			filesLoad = self.filesIn.get(prefix)
+			if (filesLoad is None
+					or
+					( isinstance(import_fields, dict)
+						and
+					  not import_fields[prefix]) ):
+				continue
 			
 			t_df = []
 			for f in filesLoad:
 				colsIn = self.file_headers.get(prefix)
 
 				t_df.append(pd_load(f,
-							import_fields=import_fields,
-							col_names_in=colsIn,
-							safe_mode=safe_mode,
-							**pd_params))
+								import_fields=import_fields,
+								col_names_in=colsIn,
+								safe_mode=safe_mode,
+								**pd_params))
 			if df.empty:
 				df = pd.concat(t_df)
 				suff_left = ''.join(prefix.partition('_')[1:])
-				t = import_fields[prefix][merge_on]
-				left_on = (t if t else merge_on)
+				left_on = get_merge_field(import_fields, prefix, merge_on)
 			else:
 				suff_right = ''.join(prefix.partition('_')[1:])
-				t = import_fields[prefix][merge_on]
-				right_on = (t if t else merge_on)
+				right_on = get_merge_field(import_fields, prefix, merge_on)
+				#t = import_fields[prefix][merge_on]
+				#right_on = (t if t else merge_on)
 				df = df.merge(pd.concat(t_df),
 							  left_on = left_on,
 							  right_on = right_on,
@@ -71,6 +84,7 @@ class imgt_loader(object):
 							  suffixes = (suff_left,suff_right))
 				suff_left = suff_right
 				left_on = right_on
+
 		return df
 pass
 
@@ -78,9 +92,11 @@ def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_
 	"""
 	col_names_in: column names, ignored if file has header. ~~~ Fix this? ~~~
 	"""
-	cols = return_cols(import_fields, fileIn)
-	if cols['use'] is None:
-		return
+
+	if import_fields is not None:
+		cols = return_cols(import_fields, fileIn)
+	else:
+		cols = {'use': None, 'rename':None}
 
 	pd_load = pd.read_csv
 
@@ -130,21 +146,24 @@ def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_
 				  inplace = True)
 	return df
 
-def get_filenames(dirname, imgt_filetypes=None):
+def get_filenames(dirname, imgt_filetypes_param=None):
 	"""Returns imgt filetype-specific filenames.
 	The commented out stuff reorganizes this data -- could be useful later.
 	Vars in 'imgt_filetypes' must be either
 	  - integers corresponding to the IMGT files
 	  - strings of the imgt file prefixes [must start with numbers. :( Hardcoded.]"""
-	if imgt_filetypes is None:
-		imgt_filetypes = ['1_Summary', '2_IMGT-gapped-nt-sequences', '3_Nt-sequences', '4_IMGT-gapped-AA-sequences', '5_AA-sequences', '6_Junction', '7_V-REGION-mutation-and-AA-change-table', '8_V-REGION-nt-mutation-statistics', '9_V-REGION-AA-change-statistics', '10_V-REGION-mutation-hotspots', '11_Parameters']
-	elif all([isinstance(s,int) for s in imgt_filetypes]):
-		t = ['', '1_Summary', '2_IMGT-gapped-nt-sequences', '3_Nt-sequences', '4_IMGT-gapped-AA-sequences', '5_AA-sequences', '6_Junction', '7_V-REGION-mutation-and-AA-change-table', '8_V-REGION-nt-mutation-statistics', '9_V-REGION-AA-change-statistics', '10_V-REGION-mutation-hotspots', '11_Parameters']
-		imgt_filetypes = [t[i] for i in imgt_filetypes]
+	if imgt_filetypes_param is None:
+		imgt_filetypes_set = imgt_filetypes
+	elif all([isinstance(s,int) for s in imgt_filetypes_param]):
+		t = imgt_filetypes
+		imgt_filetypes_set = [t[i - 1] for i in imgt_filetypes_set]
+	else:
+		# No error checking!!  Assumes those passed in are correct.
+		imgt_filetypes_set = imgt_filetypes_param
 	files = sorted(os.walk(dirname).next()[2])
 	fn_imgt = {} # maps imgt file types or numbers to files in path
 	#fn_proj = {} # maps sequence set base names to imgt files
-	for s in imgt_filetypes:
+	for s in imgt_filetypes_set:
 		i = int(s.partition('_')[0])
 		for file in files:
 			if file.startswith(s):

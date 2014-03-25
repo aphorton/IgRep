@@ -1,5 +1,5 @@
 import os
-from .loader import	pd_load, imgt_loader
+from .loader import	pd_load, IMGT_Loader
 
 #__all__ = ['imgt','load']
 #import load
