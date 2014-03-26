@@ -93,12 +93,13 @@ def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_
 	col_names_in: column names, ignored if file has header. ~~~ Fix this? ~~~
 	"""
 
+	pd_load = pd.read_csv
+
+
 	if import_fields is not None:
 		cols = return_cols(import_fields, fileIn)
 	else:
 		cols = {'use': None, 'rename':None}
-
-	pd_load = pd.read_csv
 
 	# get file header names, checking if first first field == 'Sequence number'
 	header_names = get_header(fileIn,
@@ -150,8 +151,11 @@ def get_filenames(dirname, imgt_filetypes_param=None):
 	"""Returns imgt filetype-specific filenames.
 	The commented out stuff reorganizes this data -- could be useful later.
 	Vars in 'imgt_filetypes' must be either
-	  - integers corresponding to the IMGT files
-	  - strings of the imgt file prefixes [must start with numbers. :( Hardcoded.]"""
+	- integers corresponding to the IMGT files
+	- strings of the imgt file prefixes [must start with numbers. :( Hardcoded.]"""
+	
+	assert os.path.exists(dirname), "directory {} does not exist".format(dirname)
+
 	if imgt_filetypes_param is None:
 		imgt_filetypes_set = imgt_filetypes
 	elif all([isinstance(s,int) for s in imgt_filetypes_param]):

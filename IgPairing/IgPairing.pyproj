@@ -6,8 +6,7 @@
     <ProjectGuid>179711ab-b200-4fa4-b43d-2d1eae6892a0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>IgPairing.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\IgTools</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>IgPairing</Name>
@@ -23,6 +22,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="IgPairing.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="reference\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="reference\IMGT_sample_file_formats.xlsx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

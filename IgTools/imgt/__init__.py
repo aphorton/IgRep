@@ -1,5 +1,6 @@
 import os
 from .loader import	pd_load, IMGT_Loader
+import nomenclature
 
 #__all__ = ['imgt','load']
 #import load

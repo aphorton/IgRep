@@ -14,7 +14,7 @@ imgt
 Import IMGT results file(s) into a pandas dataframe.
 
 ```python
-from .loader import	imgt_loader
+from imgt.loader import	IMGT_Loader
 # directory containing IMGT results files.
 imgt_filepath = './imgt_results/exp1'
 # specify columns to import & define new names (if desired)
