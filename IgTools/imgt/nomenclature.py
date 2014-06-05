@@ -81,3 +81,60 @@ imgt_namedtup = dict_to_namedtuple(imgt_dict)
 #	pass
 
 
+
+""" ~~~~~~~~~~~~~~~~~~~~~~~~~~
+	This was in IgPairing.py, commented out. I've forgotten exactly what I had in mind -- it was 
+	some way to enforce name consistency.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+########################################################################################
+#converters : dict. optional
+#Dict of functions for converting values in certain columns. Keys can either be integers or column labels
+########################################################################################
+
+#const = {'seqID': 'seqID',
+#		 'seqNum':'seqNum',
+#		 'vgene': 'Vgene',
+#		 'dgene': 'Dgene',
+#		 'jgene': 'Jgene',
+#		 'junct': 'Junct',
+#		 'vdj':   'VDJ',
+#		 'vj':	  'VJ',
+#		 'aa':    'aa',
+#		 'nt':    'nt',
+#		 }
+
+#aa_field = lambda field: '{}_aa'.format(field)
+#nt_field = lambda field: '{}_nt'.format(field)
+
+#cIgrep = imgt.nomenclature.igrep_namedtup
+#cImgt =  imgt.nomenclature.imgt_namedtup
+#dIgrep = imgt.nomenclature.igrep_dict
+#dImgt =  imgt.nomenclature.imgt_dict
+#f_common = lambda x: (dImgt(x),dIgrep(x))
+#f_aa = lambda x: (dImgt(x),dIgrep(x))
+#f_nt = lambda x: (dImgt(x),dIgrep(x))
+
+#import_fields = {
+#	'1_Summary': {
+#		cImgt.seqID: const['seqID'],
+#		'Sequence number': const['seqnum'],
+#		'Functionality': '',
+#		'V-GENE and allele': const['vgene'],
+#		'D-GENE and allele': const['dgene'],
+#		'J-GENE and allele': const['jgene'],
+#		'Sequence': '',
+#	},
+#	'3_Nt-sequences': {
+#		'Sequence ID': const['seqID'],
+#		'V-D-J-REGION': nt_field(const['vdj']),
+#		'V-J-REGION': nt_field(const['vj']),
+#		'JUNCTION': nt_field(const['junct']),
+#	},
+#	'5_AA-sequences': {
+#		'Sequence ID': const['seqID'],
+#		'V-D-J-REGION': aa_field(const['vdj']),
+#		'V-J-REGION': aa_field(const['vj']),
+#		'JUNCTION': aa_field(const['junct']),
+#	}
+#}

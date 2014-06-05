@@ -5,11 +5,14 @@ from imgt.loader import IMGT_Loader
 #from imgt.nomenclature import igrep as cIgrep
 #from imgt.nomenclature import imgt as cImgt
 
-# directory containing IMGT results files.
-imgt_filepath = u'F:\SkyDrive\QUICK\exampleIMGT'
+# User-defined directory containing IMGT results files.
+#	An included sample set is located in './igTools/data/sample IMGT files'. Make sure it's unzipped.
+imgt_filepath = imgt.rsrc('sample IMGT files').path # this is the path to the IMGT files.
 
 
 # specify columns to import & define new names. Use language defined in imgt.nomenclature.
+#	Include a column across all IMGT files that uniquely identifies a sequence. We use 'Sequence ID'.
+# @TODO enforce consistency in field naming.
 import_fields = {
 	"1_Summary": {
 		"Sequence ID": "seqID",
@@ -33,43 +36,6 @@ import_fields = {
 	}
 }
 
-########################################################################################
-#converters : dict. optional
-#Dict of functions for converting values in certain columns. Keys can either be integers or column labels
-########################################################################################
-
-#cIgrep = imgt.nomenclature.igrep_namedtup
-#cImgt =  imgt.nomenclature.imgt_namedtup
-#dIgrep = imgt.nomenclature.igrep_dict
-#dImgt =  imgt.nomenclature.imgt_dict
-#f_common = lambda x: (dImgt(x),dIgrep(x))
-#f_aa = lambda x: (dImgt(x),dIgrep('dIgrep(x))
-#f_nt = lambda x: (dImgt(x),dIgrep(x))
-
-#import_fields = {
-#	'1_Summary': {
-#		cImgt.seqID: const['seqID'],
-#		'Sequence number': const['seqnum'],
-#		'Functionality': '',
-#		'V-GENE and allele': const['vgene'],
-#		'D-GENE and allele': const['dgene'],
-#		'J-GENE and allele': const['jgene'],
-#		'Sequence': '',
-#	},
-#	'3_Nt-sequences': {
-#		'Sequence ID': const['seqID'],
-#		'V-D-J-REGION': nt_field(const['vdj']),
-#		'V-J-REGION': nt_field(const['vj']),
-#		'JUNCTION': nt_field(const['junct']),
-#	},
-#	'5_AA-sequences': {
-#		'Sequence ID': const['seqID'],
-#		'V-D-J-REGION': aa_field(const['vdj']),
-#		'V-J-REGION': aa_field(const['vj']),
-#		'JUNCTION': aa_field(const['junct']),
-#	}
-#}
-
 
 # imgt loader class is instantiated with a dir path or list of IMGT file(s).
 imgt_loader = IMGT_Loader(imgt_filepath)
@@ -81,10 +47,12 @@ if df.index.name is not None:
 else:
 	df.reset_index(inplace=True, drop=True) # needed for the string extract to work (bug)
 
+# split original 'Sequence ID' at the underscore. First part is new 'Seq_ID'. Extract 'Pair_Ind' from remainder & toss rest.
+#	ex. 'M00619:14:000000000-A0WLN:1:1109:19446:25158_1:N:0' -->
+#		'M00619:14:000000000-A0WLN:1:1109:19446:25158', 1
 re_expr = '(?P<{field_seqID}>[^ _]+).(?P<{field_pairInd}>[12])'.format(
 				field_seqID = 'Seq_ID',   field_pairInd = 'Pair_Ind')
-
-x = df['seqID'].str.extract(re_expr) # has fields defined in 
+x = df['seqID'].str.extract(re_expr)
 df['seqID'] = x['Seq_ID']
 
 x['Pair_Ind'] = x['Pair_Ind'].astype(int) # convert pair to int.  This is probably unnecessary and potentially bad but may speed up the following indexing operations.
@@ -96,10 +64,11 @@ df_R2 = df[ind_R2]
 
 df_paired = df_R1.merge(df_R2, how='outer', on=['seqID'], suffixes=['_R1','_R2'])
 
-df_matches = df_paired[(df_paired['num_R1']>0) & (df_paired['num_R2']>0)]
 
 
 ########### cruft below
+
+#df_matches = df_paired[(df_paired.Vgene_R1.isnull() | df_paired.Vgene_R2.isnull())]
 
 #re_expr='[^:]*:[^:]*:[^:]*:(?P<Seq_ID>[^ _]+).(?P<Pair_Ind>[12])'
 
@@ -114,19 +83,3 @@ df_matches = df_paired[(df_paired['num_R1']>0) & (df_paired['num_R2']>0)]
 #df.sort(inplace=True)
 
 #df[0:3]
-
-
-#const = {'seqID': 'seqID',
-#		 'seqNum':'seqNum',
-#		 'vgene': 'Vgene',
-#		 'dgene': 'Dgene',
-#		 'jgene': 'Jgene',
-#		 'junct': 'Junct',
-#		 'vdj':   'VDJ',
-#		 'vj':	  'VJ',
-#		 'aa':    'aa',
-#		 'nt':    'nt',
-#		 }
-
-#aa_field = lambda field: '{}_aa'.format(field)
-#nt_field = lambda field: '{}_nt'.format(field)

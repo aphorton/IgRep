@@ -86,14 +86,13 @@ class IMGT_Loader(object):
 				left_on = right_on
 
 		return df
-pass
 
 def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_params):
 	"""
 	col_names_in: column names, ignored if file has header. ~~~ Fix this? ~~~
 	"""
 
-	pd_load = pd.read_csv # !!!!!!!!!!!!!!!!!!! rename or delete
+	pd_loader_func = pd.read_csv
 
 
 	if import_fields is not None:
@@ -122,20 +121,13 @@ def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_
 	else:
 		load_this = fileIn
 		if header_names is not None:
-			header_row = 0 # header_row is input arg to pandas.read* specifying header row number
+			header_row = 0
 			names = None
 		else:
 			header_row = None
 			names = col_names_in  # could be a problem if dimension mismatch
 	
-	#pd_params.update({
-	#		'header' : header_row,
-	#		'names' : names,
-	#		'sep' : '\t',
-	#		'usecols' :cols['use'],
-	#		'low_memory' :False
-	#		})
-	df = pd_load(load_this,
+	df = pd_loader_func(load_this,
 				  header = header_row, # on which row is the headere located? <int> None if no header
 				  names = names,       # name of every column in file <list of strings> only needed in case there is no header
 				  sep = '\t',          # column seperator <char>
@@ -211,7 +203,7 @@ def return_cols(import_fields, filename):
 	}
 	import_fields can be:
 	  1. dict { IMGT_filetype: cols (dict or list) }
-	  2. dict { cols: rename vals }
+	  2. dict { cols: rename vals } # this isn't implemented.
 	  3. list/tuple/set of cols
 	  4. None - returns all columns
 	'cols' can be names or indices
