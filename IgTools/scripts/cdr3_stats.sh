@@ -20,7 +20,7 @@ Data file is tab-delimited and must contain CDR3, V-gene, J-gene,
   and (optionally) NT/AA full-length sequences. Header is assumed.
 
 Input arguments:
-  -d  print each header fields & its index.
+  -d  print each header field & its index.
 Required arguments (if -d not set):
   -n  <column #> index of full-length seq col (NT or AA) for
        filtering to 2+ reads. Set this to 0 to skip filtering or

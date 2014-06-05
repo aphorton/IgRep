@@ -4,13 +4,15 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>179711ab-b200-4fa4-b43d-2d1eae6892a0</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>IgPairing.py</StartupFile>
-    <SearchPath>..\IgTools</SearchPath>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>igPairing.py</StartupFile>
+    <SearchPath>..\igTools</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>IgPairing</Name>
-    <RootNamespace>IgPairing</RootNamespace>
+    <Name>igPairing</Name>
+    <RootNamespace>igPairing</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IgPairing.py" />
+    <Compile Include="igPairing.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="reference\" />

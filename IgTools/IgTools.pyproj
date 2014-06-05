@@ -33,12 +33,15 @@
   <ItemGroup>
     <Folder Include="imgt\" />
     <Folder Include="imgt\data\" />
+    <Folder Include="imgt\reference\" />
     <Folder Include="scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="imgt\data\IMGT_columns_ExcelOut.txt">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="imgt\reference\IMGT_sample_file_formats.xlsx" />
+    <Content Include="imgt\reference\readme_IMGT.txt" />
     <Content Include="scripts\cdr3_stats.sh">
       <SubType>Content</SubType>
     </Content>

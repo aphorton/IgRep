@@ -1,7 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "IgPairing", "IgPairing\IgPairing.pyproj", "{179711AB-B200-4FA4-B43D-2D1EAE6892A0}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "igPairing", "IgPairing\igPairing.pyproj", "{179711AB-B200-4FA4-B43D-2D1EAE6892A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3B1542FA-9D67-4AAF-93C2-C2D9CF2E1DA0} = {3B1542FA-9D67-4AAF-93C2-C2D9CF2E1DA0}
+	EndProjectSection
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "igTools", "IgTools\igTools.pyproj", "{3B1542FA-9D67-4AAF-93C2-C2D9CF2E1DA0}"
 EndProject

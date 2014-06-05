@@ -33,6 +33,11 @@ import_fields = {
 	}
 }
 
+########################################################################################
+#converters : dict. optional
+#Dict of functions for converting values in certain columns. Keys can either be integers or column labels
+########################################################################################
+
 #cIgrep = imgt.nomenclature.igrep_namedtup
 #cImgt =  imgt.nomenclature.imgt_namedtup
 #dIgrep = imgt.nomenclature.igrep_dict
@@ -76,8 +81,10 @@ if df.index.name is not None:
 else:
 	df.reset_index(inplace=True, drop=True) # needed for the string extract to work (bug)
 
-re_expr = '(?P<Seq_ID>[^ _]+).(?P<Pair_Ind>[12])'
-x = df['seqID'].str.extract(re_expr)
+re_expr = '(?P<{field_seqID}>[^ _]+).(?P<{field_pairInd}>[12])'.format(
+				field_seqID = 'Seq_ID',   field_pairInd = 'Pair_Ind')
+
+x = df['seqID'].str.extract(re_expr) # has fields defined in 
 df['seqID'] = x['Seq_ID']
 
 x['Pair_Ind'] = x['Pair_Ind'].astype(int) # convert pair to int.  This is probably unnecessary and potentially bad but may speed up the following indexing operations.

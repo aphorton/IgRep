@@ -93,7 +93,7 @@ def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_
 	col_names_in: column names, ignored if file has header. ~~~ Fix this? ~~~
 	"""
 
-	pd_load = pd.read_csv
+	pd_load = pd.read_csv # !!!!!!!!!!!!!!!!!!! rename or delete
 
 
 	if import_fields is not None:
@@ -136,12 +136,12 @@ def pd_load(fileIn, import_fields=None, col_names_in=None, safe_mode=True, **pd_
 	#		'low_memory' :False
 	#		})
 	df = pd_load(load_this,
-				  header = header_row,
-				  names = names,
-				  sep = '\t',
-				  usecols=cols['use'],
-				  low_memory=False,
-				  **pd_params)
+				  header = header_row, # on which row is the headere located? <int> None if no header
+				  names = names,       # name of every column in file <list of strings> only needed in case there is no header
+				  sep = '\t',          # column seperator <char>
+				  usecols=cols['use'], # columns you want <list of strings>
+				  low_memory=False,    # use with big files
+				  **pd_params)         # allows user to specify more pandas parameters when calling this
 	if cols['rename'] is not None and len(cols['rename']) > 0:
 		df.rename(columns = cols['rename'],
 				  inplace = True)
