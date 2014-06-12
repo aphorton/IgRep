@@ -5,8 +5,8 @@
 
 usageStr="Usage: `basename $0` [-n int (full-seq)] [-c int (cdr3)] [-v int (Vgene)] [-j int (Jgene)] [filename] (-h for help) (-d to print file headers)"
 if (($# == 0)); then
-	echo $usageStr;
-	exit $E_OPTERROR;
+    echo $usageStr;
+    exit $E_OPTERROR;
 fi
 
 
@@ -105,17 +105,17 @@ mkdir $tmpFolder
 mkdir -p $outFolder
 
 if [ $nt -ge 1 ]; then
-	# put data into sorted order based on column $nt
-	tail -n +2 $fn | tr -d "\r" | sort -t$'\t' -k $nt,$nt > $fnSort
-	# get counts of each val in column $nt
-	cut -f$nt $fnSort | uniq -c | tr -s " *" "\t" | cut -f2,3 > $fnTMP
-	# remove rows with duplicate $nt vals from fnSort & join with fnTMP. Sort by decreasing count. Save.
-	sort -uk $nt,$nt $fnSort |join -t$'\t' -1 2 -2 $nt $fnTMP - | sort -rk 2,2 > $fnNoSingles
-	cdr=$(($cdr + 1))
-	vgene=$(($vgene + 1))
-	jgene=$(($jgene + 1))
+    # put data into sorted order based on column $nt
+    tail -n +2 $fn | tr -d "\r" | sort -t$'\t' -k $nt,$nt > $fnSort
+    # get counts of each val in column $nt
+    cut -f$nt $fnSort | uniq -c | tr -s " *" "\t" | cut -f2,3 > $fnTMP
+    # remove rows with duplicate $nt vals from fnSort & join with fnTMP. Sort by decreasing count. Save.
+    sort -uk $nt,$nt $fnSort |join -t$'\t' -1 2 -2 $nt $fnTMP - | sort -rk 2,2 > $fnNoSingles
+    cdr=$(($cdr + 1))
+    vgene=$(($vgene + 1))
+    jgene=$(($jgene + 1))
 else
-	tail -n +2 $fn > $fnNoSingles
+    tail -n +2 $fn > $fnNoSingles
 fi
 
 ### get unique CDR3s ###

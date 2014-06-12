@@ -50,6 +50,8 @@
     <Content Include="scripts\cdr3_stats.sh">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="scripts\clust_with_args.exe" />
+    <Content Include="scripts\process_fullLen.sh" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
